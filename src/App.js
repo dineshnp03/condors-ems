@@ -1,5 +1,6 @@
 import './App.css';
 import EmployeeDirectory from './components/employee-directory';
+import EmployeeTable from './components/employee-table';
 
 function App() {
   return (
@@ -8,6 +9,9 @@ function App() {
      <div className="container">
       <div className="row">
           <EmployeeDirectory />
+      </div>
+      <div>
+        <EmployeeTable/>
       </div>
      </div>
     </div>

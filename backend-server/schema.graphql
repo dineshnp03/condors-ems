@@ -1,0 +1,32 @@
+scalar GraphQLDate
+
+type Employee {
+  id: Int
+  firstName: String
+  lastName: String
+  age: Int
+  dateOfJoining: GraphQLDate
+  title: String
+  department: String
+  EmployeeType: String
+  currentStatus: Boolean
+}
+
+input EmployeeInput {
+  firstName: String
+  lastName: String
+  age: Int
+  dateOfJoining: GraphQLDate
+  title: String
+  department: String
+  EmployeeType: String
+  currentStatus: Boolean
+}
+
+type Query {
+  employeeList: [Employee]
+}
+
+type Mutation {
+  createEmployee(newEmployee: EmployeeInput): Employee
+}

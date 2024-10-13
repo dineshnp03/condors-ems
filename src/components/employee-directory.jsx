@@ -39,6 +39,9 @@ class EmployeeDirectory extends Component {
         <EmployeeTable />
         <EmployeeCreate />
         <EmployeeSearch />
+        <!-- <EmployeeSearch onSearch={this.searchEmployees} /> -->
+        <!-- <EmployeeTable employees={this.state.filteredEmployees} /> -->
+        <!-- <EmployeeCreate onCreate={this.addEmployee} /> -->
       </div>
     );
   }

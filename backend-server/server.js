@@ -23,18 +23,18 @@ const getAllEmployees = async() => {
 
 //  Get the Employees Count from the DB collection
 const getEmployeesCount = async () => {
-    const getEmployeesCount = await db.collection('employees').find({}).count();
+    const getEmployeesCount = await db.collection('employees').countDocuments();
     return getEmployeesCount;
 }
 
 
 // Create new Employee to the DB
-const createEmployee = async (_, {employee})=> {
-    const newEmployee = {
-        employee,
+const createEmployee = async (_, {newEmployee})=> {
+    const employeeAdd = {
+        ...newEmployee,
         id: await getEmployeesCount() + 1
     }
-    const insertNewEmployee = await db.collection('employees').insertOne(newEmployee);
+    const insertNewEmployee = await db.collection('employees').insertOne(employeeAdd);
     const insertedEmployee = await db.collection('employees').findOne({_id: insertNewEmployee.insertedId});
     return insertedEmployee;
 }

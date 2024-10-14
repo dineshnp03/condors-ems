@@ -1,3 +1,8 @@
+// Group Members : 
+// Dinesh Narasimhalu Punniyamoorthy
+// Jemish Budheshkumar Surani
+// Priyank Ghanshyambhai Padshala
+
 import './App.css';
 import EmployeeDirectory from './components/employee-directory';
 

@@ -43,7 +43,7 @@ class EmployeeTable extends Component {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center">
+                  <td colSpan="8" className="text-center my-3">
                     No Employees Found
                   </td>
                 </tr>

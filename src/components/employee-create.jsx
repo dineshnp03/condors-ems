@@ -1,9 +1,6 @@
 import { Component } from "react";
 
 class EmployeeCreate extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
   errors = [];
   isValid = true;
   handleAddEmployee = (e) => {
@@ -40,7 +37,7 @@ class EmployeeCreate extends Component {
 
   render() {
     return (
-      <div className="">
+      <div>
         <h3>Add an Employee</h3>
         {this.errors.length > 0
           ? this.errors.map((error, index) => {

@@ -86,7 +86,8 @@ connectToDb((url, err) => {
     if(!err) {
         app.listen(port, () => {
             console.log("App is running in port: ", port)
-            // console.log("Connected to Mongo Db: ", url)
+            console.log("Connected to Mongo Db: ", url)
+            console.log(`Start Apollo server in http://localhost:${port}/graphql`);
             db = getDb();
         })
         // console.log(db)

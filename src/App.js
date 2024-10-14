@@ -1,14 +1,19 @@
 import './App.css';
 import EmployeeDirectory from './components/employee-directory';
 
+
 function App() {
   return (
     <div className="App">
-     <h1 className='text-center'>Employee Management Sysem</h1>
-     <div className="container">
-      <div className="row">
+    <nav className="navbar navbar-primary bg-dark mb-3">
+          <div className="container-fluid  justify-content-center">
+            <span className="navbar-brand mb-0 h1  fw-bold  text-light">
+              Condors Employee Management System
+              </span>
+          </div>
+        </nav>
+     <div className="container-fluid p-4">
           <EmployeeDirectory />
-      </div>
      </div>
     </div>
   );

@@ -30,6 +30,7 @@ const getEmployeesCount = async () => {
 
 // Create new Employee to the DB
 const createEmployee = async (_, {newEmployee})=> {
+    console.log(newEmployee);
     const employeeAdd = {
         ...newEmployee,
         id: await getEmployeesCount() + 1
@@ -85,7 +86,7 @@ connectToDb((url, err) => {
     if(!err) {
         app.listen(port, () => {
             console.log("App is running in port: ", port)
-            console.log("Connected to Mongo Db: ", url)
+            // console.log("Connected to Mongo Db: ", url)
             db = getDb();
         })
         // console.log(db)

@@ -1,31 +1,68 @@
 import { Component } from "react";
 
 class EmployeeCreate extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      firstname: "",
-      lastName: "",
-      age: 0,
-      doj: "",
-      title: "",
-      department: "",
-      empType: "",
-      currentStatus: true, //retired = false, Working= true, hat when Employee is created the default value for CurrentStatus would be 1
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
+  errors = [];
+  isValid = true;
+  handleAddEmployee = (e) => {
+    e.preventDefault();
+    const formData = document.forms.employeeForm;
+    const pattern = /^[a-zA-Zà-žÀ-Ž' -]{1,50}$/;
+    if (!formData.firstName.value || !pattern.test(formData.firstName.value)) {
+      this.errors.push("First Name is not a valid one. Provide alphabets");
+      this.isValid = false;
+    }
+    if (!formData.lastName.value || !pattern.test(formData.lastName.value)) {
+      this.errors.push("Last Name is not a valid one. Provide alphabets");
+      this.isValid = false;
+    }
+    console.log(this.isValid, this.errors);
+    if (this.isValid) {
+      const newEmployee = {
+        firstName: formData.firstName.value.trim(),
+        lastName: formData.lastName.value.trim(),
+        age: parseInt(formData.age.value),
+        dateOfJoining: new Date(formData.dateOfJoining.value).toISOString(),
+        title: formData.title.value,
+        department: formData.department.value,
+        EmployeeType: formData.EmployeeType.value,
+        currentStatus: true, // Whenever we are creating new employee the current Status will be true as it is considered as working.
+      };
+
+      this.props.createEmployee(newEmployee);
+      document.forms.employeeForm.reset();
+    } else {
+      alert("Please fill all the fields and provide valid data");
+    }
+  };
 
   render() {
     return (
-      <div className="my-5">
-        <h1>Add an Employee</h1>
-        <form className="card p-3 m-3">
+      <div className="">
+        <h3>Add an Employee</h3>
+        {this.errors.length > 0
+          ? this.errors.map((error, index) => {
+              return (
+                <div key={index} className="alert alert-warning" role="alert">
+                  {error}
+                </div>
+              );
+            })
+          : ""}
+
+        <form
+          name="employeeForm"
+          onSubmit={this.handleAddEmployee}
+          className="card p-3 my-3"
+        >
           <div className="mb-3">
             <label className="form-label">First Name:</label>
             <input
               type="text"
-              name="firstname"
-              id="firstname"
+              name="firstName"
+              id="firstName"
               placeholder="Enter First Name"
               className="form-control"
               required
@@ -35,8 +72,8 @@ class EmployeeCreate extends Component {
             <label className="form-label">Last Name:</label>
             <input
               type="text"
-              name="lastname"
-              id="lastname"
+              name="lastName"
+              id="lastName"
               placeholder="Enter Last Name"
               className="form-control"
               required
@@ -59,8 +96,8 @@ class EmployeeCreate extends Component {
             <label className="form-label">Date of Joining:</label>
             <input
               type="date"
-              name="doj"
-              id="doj"
+              name="dateOfJoining"
+              id="dateOfJoining"
               className="form-control"
               max={new Date().toISOString().slice(0, 10)}
             />
@@ -105,8 +142,8 @@ class EmployeeCreate extends Component {
             <label className="form-label">Employee Type:</label>
             <select
               defaultValue={""}
-              name="empType"
-              id="empType"
+              name="EmployeeType"
+              id="EmployeeType"
               className="form-select"
               required
             >
@@ -119,7 +156,11 @@ class EmployeeCreate extends Component {
               <option value="Seasonal">Seasonal</option>
             </select>
           </div>
-          <button className="btn btn-primary">Add Employee</button>
+          <div className="d-flex justify-content-center mb-3">
+            <button type="submit" className="btn btn-dark ">
+              Add Employee
+            </button>
+          </div>
         </form>
       </div>
     );

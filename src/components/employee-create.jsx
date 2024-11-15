@@ -1,22 +1,27 @@
 import { Component } from "react";
 
 class EmployeeCreate extends Component {
-  errors = [];
-  isValid = true;
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: [],
+      isValid: true,
+    };
+  }
+
   handleAddEmployee = (e) => {
     e.preventDefault();
     const formData = document.forms.employeeForm;
     const pattern = /^[a-zA-Zà-žÀ-Ž' -]{1,50}$/;
     if (!formData.firstName.value || !pattern.test(formData.firstName.value)) {
       this.errors.push("First Name is not a valid one. Provide alphabets");
-      this.isValid = false;
+      this.setState({ isValid: false });
     }
     if (!formData.lastName.value || !pattern.test(formData.lastName.value)) {
       this.errors.push("Last Name is not a valid one. Provide alphabets");
-      this.isValid = false;
+      this.setState({ isValid: false });
     }
-    console.log(this.isValid, this.errors);
-    if (this.isValid) {
+    if (this.state.isValid) {
       const newEmployee = {
         firstName: formData.firstName.value.trim(),
         lastName: formData.lastName.value.trim(),
@@ -39,8 +44,8 @@ class EmployeeCreate extends Component {
     return (
       <div>
         <h3>Add an Employee</h3>
-        {this.errors.length > 0
-          ? this.errors.map((error, index) => {
+        {this.state.errors.length > 0
+          ? this.state.errors.map((error, index) => {
               return (
                 <div key={index} className="alert alert-warning" role="alert">
                   {error}

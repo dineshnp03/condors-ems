@@ -25,8 +25,12 @@ input EmployeeInput {
 
 type Query {
   employeeList: [Employee]
+  employeeDetail(id: Int): Employee
 }
 
 type Mutation {
   createEmployee(newEmployee: EmployeeInput): Employee
+  updateEmployee(id: Int, newEmployee: EmployeeInput): Employee
+  deleteEmployee(id: Int): String
+
 }

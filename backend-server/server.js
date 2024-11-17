@@ -38,11 +38,17 @@ const getAllEmployees = async() => {
 const getEmployeesCount = async () => {
     try {
 
-        const getEmployeesCount = await db.collection('employees').countDocuments();
+        const getEmployeesCount = await db.collection("counters")
+        .findOneAndUpdate(
+          { name: 'employees' },
+          { $inc: { count: 1 } },
+          { returnOriginal: false, upsert: true }
+        );
+        console.log(getEmployeesCount)
         if(!getEmployeesCount) {
             throw new Error("Error while fetching count");
         }
-        return getEmployeesCount;
+        return getEmployeesCount.count;
     } catch(error) {
         throw new Error(error.message);
     }
@@ -56,8 +62,9 @@ const createEmployee = async (_, {newEmployee})=> {
         console.log(newEmployee);
         const employeeAdd = {
             ...newEmployee,
-            id: await getEmployeesCount() + 1
+            id: await getEmployeesCount()
         }
+        console.log(employeeAdd)
         const insertNewEmployee = await db.collection('employees').insertOne(employeeAdd);
         const insertedEmployee = await db.collection('employees').findOne({_id: insertNewEmployee.insertedId});
         return insertedEmployee;

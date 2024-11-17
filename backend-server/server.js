@@ -106,8 +106,9 @@ const deleteEmployee = async (_, {id}) => {
         if(!deletedEmployee) {
             throw new Error('Employee Detail not found, Check admin');
         }
-        await db.collection('employees').deleteOne({id: parseInt(id)});
-        return deletedEmployee;
+        const result = await db.collection('employees').deleteOne({id: parseInt(id)});
+        console.log(result)
+        return result.deletedCount > 0;
     } catch(error) {
         console.log('Error while deleting employee details');
         throw new Error(error.message);

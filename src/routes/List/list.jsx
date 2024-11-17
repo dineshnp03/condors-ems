@@ -1,5 +1,6 @@
 import { Component } from "react";
 import EmployeeTable from "../../components/employee-table";
+import { Outlet } from "react-router-dom";
 
 class List extends Component {
   constructor(props) {
@@ -7,26 +8,34 @@ class List extends Component {
     this.state = {
       employees: [],
       enableToast: false, // added bootstrap toasts
+      toastMessage: {
+        title: "",
+        message: "",
+      },
     };
   }
 
   // Getting the Employees data from Backend and changing the state in Mount LifeCyel
   async componentDidMount() {
+    this.loadEmployees();
+  }
+
+  loadEmployees = async () => {
     const query = `
-      query {
-        employeeList {
-          id
-          firstName
-          lastName
-          age
-          dateOfJoining
-          title
-          department
-          EmployeeType
-          currentStatus
-        }
+    query {
+      employeeList {
+        id
+        firstName
+        lastName
+        age
+        dateOfJoining
+        title
+        department
+        EmployeeType
+        currentStatus
       }
-    `;
+    }
+  `;
 
     try {
       const response = await fetch("/graphql", {
@@ -52,6 +61,50 @@ class List extends Component {
     } catch (error) {
       console.log("Error fetching employees:", error);
     }
+  };
+
+  deleteEmployee = async (id) => {
+    try {
+      const query = `
+      mutation {
+      deleteEmployee(id: ${id})
+      }`;
+      const response = await fetch("/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      if (!response.ok) {
+        throw new Error("Error!!!, Please try again");
+      }
+      const result = await response.json();
+
+      if (result.data && result.data.deleteEmployee) {
+        this.setState({
+          toastMessage: {
+            title: "success",
+            message: "Employee deleted successfully",
+          },
+          enableToast: true,
+        });
+
+        this.loadEmployees();
+      } else {
+        console.log("Error deleting employee", result.errors);
+      }
+    } catch (error) {
+      console.log("Error deleting employee:", error.message);
+    }
+  };
+
+  componentDidUpdate(prevState) {
+    if (prevState.enableToast !== this.state.enableToast) {
+      setTimeout(() => {
+        this.setState({
+          enableToast: false,
+        });
+      }, 3000);
+    }
   }
 
   render() {
@@ -65,7 +118,9 @@ class List extends Component {
             aria-atomic="true"
           >
             <div className="toast-header">
-              <strong className="me-auto">Added!!!</strong>
+              <strong className="me-auto">
+                {this.state.toastMessage.title}!!!
+              </strong>
               <button
                 type="button"
                 className="btn-close"
@@ -75,16 +130,18 @@ class List extends Component {
               ></button>
             </div>
             <div className="toast-body">
-              Employee Details Added Successfully!!!.
+              {this.state.toastMessage.message}!!!.
             </div>
           </div>
         </div>
         <div className="row gx-4">
-            <center>
-                <div className="col-lg-6 col-sm-12">
-                <EmployeeTable employees={this.state.employees} />
-                </div>
-            </center>
+          <div className="col-sm-12 p-5">
+            <EmployeeTable
+              deleteEmployee={this.deleteEmployee}
+              employees={this.state.employees}
+            />
+          </div>
+          <Outlet />
         </div>
       </>
     );

@@ -9,6 +9,7 @@ import Navbar from './routes/Navbar/navbar';
 import Home from './routes/Home/home';
 import List from './routes/List/list';
 import AddEmployee from './routes/Add Employee/addEmployee';
+import EmployeeDetail from './components/employee-detail';
 
 
 function App() {
@@ -25,7 +26,9 @@ function App() {
      <Routes>
         <Route path='/' element={<Navbar />} >
           <Route index element={<Home />}/>
-          <Route path='/list' element={<List />}/>
+          <Route path='/list' element={<List />}>
+            <Route path=':id' element={<EmployeeDetail/>} />
+          </Route>
           <Route path='/addEmployee' element={<AddEmployee />}/>
         </Route>
       </Routes>

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import EmployeeCreate from "../../components/employee-create";
+import { Navigate, redirect } from "react-router-dom";
 
 class AddEmployee extends Component {
   constructor(props) {
@@ -7,6 +8,7 @@ class AddEmployee extends Component {
     this.state = {
       employees: [],
       enableToast: false, // added bootstrap toasts
+      redirect: false,
     };
   }
 
@@ -44,13 +46,10 @@ class AddEmployee extends Component {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        this.setState({ enableToast: true });
-        setTimeout(() => {
-          this.setState({ enableToast: false });
-        }, 3000);
         if (data.data.createEmployee) {
           this.setState({
             employees: [...this.state.employees, data.data.createEmployee],
+            enableToast: true,
           });
         }
       })
@@ -59,7 +58,22 @@ class AddEmployee extends Component {
       });
   };
 
+  componentDidUpdate(prevState) {
+    if (prevState.enableToast !== this.state.enableToast) {
+      setTimeout(() => {
+        this.setState({
+          enableToast: false,
+          redirect: true,
+        });
+      }, 3000);
+    }
+  }
+
   render() {
+    if (this.state.redirect) {
+      return <Navigate to="/list" />;
+    }
+
     return (
       <>
         <div className="d-flex justify-content-end">
@@ -87,7 +101,7 @@ class AddEmployee extends Component {
         <div className="row gx-4">
           <center>
             <div className="col-lg-6 col-sm-12">
-            <EmployeeCreate createEmployee={this.createEmployee} />
+              <EmployeeCreate createEmployee={this.createEmployee} />
             </div>
           </center>
         </div>

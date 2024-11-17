@@ -75,7 +75,6 @@ class AddEmployee extends Component {
   //  Employee creation function getting the newEmployee Data from the EmployeeCreate component
   createEmployee = (newEmployee) => {
     console.log(newEmployee);
-    debugger;
     const addQuery = this.state.isEdit
       ? `
       mutation updateEmployee($id: Int!, $newEmployee: EmployeeInput!) {

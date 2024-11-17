@@ -24,7 +24,6 @@ class EmployeeCreate extends Component {
   }
 
   setFormState = (employee) => {
-    debugger;
     this.setState({
       firstName: employee.firstName || "",
       lastName: employee.lastName || "",
@@ -104,7 +103,6 @@ class EmployeeCreate extends Component {
   };
 
   render() {
-    console.log(this.state);
     const {
       firstName,
       lastName,

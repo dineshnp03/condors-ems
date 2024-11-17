@@ -7,6 +7,7 @@ class List extends Component {
     super(props);
     this.state = {
       employees: [],
+      filteredEmployees: [],
       enableToast: false, // added bootstrap toasts
       toastMessage: {
         title: "",

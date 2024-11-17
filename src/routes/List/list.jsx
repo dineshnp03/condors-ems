@@ -52,7 +52,10 @@ class List extends Component {
       const result = await response.json();
 
       if (result.data && result.data.employeeList) {
-        this.setState({ employees: result.data.employeeList });
+        this.setState({ 
+          employees: result.data.employeeList,
+          filteredEmployees: result.data.employeeList,
+        });
       } else {
         console.log(
           "Error: employeeList is undefined",

@@ -9,7 +9,7 @@ class EmployeeDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employee: {},
+      employee: null,
       error: null,
     };
   }
@@ -85,7 +85,7 @@ class EmployeeDetail extends Component {
               <strong>Name:</strong> {employee.firstName} {employee.lastName}
             </p>
             <p>
-              <strong>Age:</strong> {employee.id}
+              <strong>Age:</strong> {employee.age}
             </p>
             <p>
               <strong>Date of Joining:</strong>{" "}

@@ -4,48 +4,125 @@ class EmployeeCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstName: "",
+      lastName: "",
+      age: "",
+      dateOfJoining: "",
+      title: "",
+      department: "",
+      EmployeeType: "",
+      currentStatus: true,
       errors: [],
       isValid: true,
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.employee !== this.props.employee) {
+      this.setFormState(this.props.employee);
+    }
+  }
+
+  setFormState = (employee) => {
+    debugger;
+    this.setState({
+      firstName: employee.firstName || "",
+      lastName: employee.lastName || "",
+      age: employee.age || "",
+      dateOfJoining:
+        new Date(employee.dateOfJoining).toISOString().slice(0, 10) || "",
+      title: employee.title || "",
+      department: employee.department || "",
+      EmployeeType: employee.EmployeeType || "",
+      currentStatus: employee.currentStatus ?? true,
+    });
+  };
+
+  handleDataChange = (e) => {
+    console.log(e.target);
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   handleAddEmployee = (e) => {
     e.preventDefault();
-    const formData = document.forms.employeeForm;
+    const {
+      firstName,
+      lastName,
+      age,
+      dateOfJoining,
+      title,
+      department,
+      EmployeeType,
+      currentStatus,
+    } = this.state;
     const pattern = /^[a-zA-Zà-žÀ-Ž' -]{1,50}$/;
-    if (!formData.firstName.value || !pattern.test(formData.firstName.value)) {
-      this.errors.push("First Name is not a valid one. Provide alphabets");
-      this.setState({ isValid: false });
+    this.setState({ errors: [], isValid: true });
+    if (!firstName || !pattern.test(firstName)) {
+      this.setState((prevState) => ({
+        errors: [
+          ...prevState.errors,
+          "First Name is not a valid one. Provide alphabets",
+        ],
+        isValid: false,
+      }));
     }
-    if (!formData.lastName.value || !pattern.test(formData.lastName.value)) {
-      this.errors.push("Last Name is not a valid one. Provide alphabets");
-      this.setState({ isValid: false });
+    if (!lastName || !pattern.test(lastName)) {
+      this.setState((prevState) => ({
+        errors: [
+          ...prevState.errors,
+          "Last Name is not a valid one. Provide alphabets",
+        ],
+        isValid: false,
+      }));
     }
     if (this.state.isValid) {
       const newEmployee = {
-        firstName: formData.firstName.value.trim(),
-        lastName: formData.lastName.value.trim(),
-        age: parseInt(formData.age.value),
-        dateOfJoining: new Date(formData.dateOfJoining.value).toISOString(),
-        title: formData.title.value,
-        department: formData.department.value,
-        EmployeeType: formData.EmployeeType.value,
-        currentStatus: true, // Whenever we are creating new employee the current Status will be true as it is considered as working.
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        age: parseInt(age),
+        dateOfJoining: new Date(dateOfJoining).toISOString(),
+        title,
+        department,
+        EmployeeType,
+        currentStatus,
       };
 
       this.props.createEmployee(newEmployee);
-      document.forms.employeeForm.reset();
+      this.setState({
+        firstName: "",
+        lastName: "",
+        age: 20,
+        dateOfJoining: "",
+        title: "",
+        department: "",
+        EmployeeType: "",
+        currentStatus: true,
+      });
     } else {
       alert("Please fill all the fields and provide valid data");
     }
   };
 
   render() {
+    console.log(this.state);
+    const {
+      firstName,
+      lastName,
+      age,
+      dateOfJoining,
+      title,
+      department,
+      EmployeeType,
+      currentStatus,
+      errors,
+    } = this.state;
+    const { employee } = this.props;
+    console.log(employee);
     return (
       <div>
-        <h3>Add an Employee</h3>
-        {this.state.errors.length > 0
-          ? this.state.errors.map((error, index) => {
+        <h3>{employee ? "Update" : "Add"} Employee</h3>
+        {errors.length > 0
+          ? errors.map((error, index) => {
               return (
                 <div key={index} className="alert alert-warning" role="alert">
                   {error}
@@ -65,6 +142,9 @@ class EmployeeCreate extends Component {
               type="text"
               name="firstName"
               id="firstName"
+              value={firstName}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
               placeholder="Enter First Name"
               className="form-control"
               required
@@ -78,6 +158,9 @@ class EmployeeCreate extends Component {
               id="lastName"
               placeholder="Enter Last Name"
               className="form-control"
+              value={lastName}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
               required
             />
           </div>
@@ -90,6 +173,9 @@ class EmployeeCreate extends Component {
               min={20}
               max={70}
               placeholder="Age"
+              value={age}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
               className="form-control"
               required
             />
@@ -100,6 +186,9 @@ class EmployeeCreate extends Component {
               type="date"
               name="dateOfJoining"
               id="dateOfJoining"
+              value={dateOfJoining}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
               className="form-control"
               max={new Date().toISOString().slice(0, 10)}
             />
@@ -107,10 +196,11 @@ class EmployeeCreate extends Component {
           <div className="mb-3">
             <label className="form-label">Title:</label>
             <select
-              defaultValue={""}
               name="title"
               id="title"
               className="form-select"
+              value={title}
+              onChange={this.handleDataChange}
               required
             >
               <option value="" disabled>
@@ -125,7 +215,8 @@ class EmployeeCreate extends Component {
           <div className="mb-3">
             <label className="form-label">Department:</label>
             <select
-              defaultValue={""}
+              value={department}
+              onChange={this.handleDataChange}
               name="department"
               id="department"
               className="form-select"
@@ -143,7 +234,9 @@ class EmployeeCreate extends Component {
           <div className="mb-3">
             <label className="form-label">Employee Type:</label>
             <select
-              defaultValue={""}
+              value={EmployeeType}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
               name="EmployeeType"
               id="EmployeeType"
               className="form-select"
@@ -158,9 +251,25 @@ class EmployeeCreate extends Component {
               <option value="Seasonal">Seasonal</option>
             </select>
           </div>
+          {employee && (
+            <div className="mb-3">
+              <label className="form-label">Current Status:</label>
+              <select
+                value={currentStatus}
+                onChange={this.handleDataChange}
+                name="currentStatus"
+                id="currentStatus"
+                className="form-select"
+                required
+              >
+                <option value={true}>Working</option>
+                <option value={false}>Retired</option>
+              </select>
+            </div>
+          )}
           <div className="d-flex justify-content-center mb-3">
             <button type="submit" className="btn btn-dark ">
-              Add Employee
+              {employee ? "Update" : "Add"} Employee
             </button>
           </div>
         </form>

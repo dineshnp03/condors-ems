@@ -52,7 +52,15 @@ class EmployeeTable extends Component {
                     <td>{employee.EmployeeType}</td>
                     <td>{employee.currentStatus ? "Working" : "Retired"}</td>
                     <td>
-                      <Button variant="primary">Edit</Button>{" "}
+                      <Button variant="primary">
+                        {" "}
+                        <Link
+                          className="text-decoration-none text-reset"
+                          to={`/editEmployee/${employee.id}`}
+                        >
+                          Edit
+                        </Link>
+                      </Button>{" "}
                       <Button variant="secondary">
                         <Link
                           className="text-decoration-none text-reset"

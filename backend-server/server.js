@@ -91,11 +91,16 @@ const getEmployeeById = async (_, {id}) => {
 }
 
 // Update Employee Details by passing the Id and EmployeeInput
-const updateEmployee = async (_, {id, employeeInput}) => {
+const updateEmployee = async (_, {id, newEmployee}) => {
+    console.log(newEmployee)
     try {
-        await db.collection('employees').updateOne({id: parseInt(id)}, {$set: employeeInput});
+        const updateData = await db.collection('employees').updateOne({id: parseInt(id)}, {$set: newEmployee});
+        console.log(updateData)
+        if (updateData.matchedCount === 0) {
+            throw new Error('Employee not found, please check the Id.');
+        }
         const updatedEmployee = await db.collection('employees').findOne({id: parseInt(id)});
-        if(!updateEmployee) {
+        if(!updatedEmployee) {
             throw new Error('Employee Detail not found, Check admin');
         }
         return updatedEmployee;

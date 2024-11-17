@@ -170,7 +170,7 @@ class List extends Component {
           <div className="col-sm-12 p-5">
             <EmployeeTable
               deleteEmployee={this.deleteEmployee}
-              employees={this.state.employees}
+              employees={this.state.filteredEmployees}
             />
           </div>
           <Outlet />

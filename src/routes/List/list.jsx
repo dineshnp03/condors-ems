@@ -134,6 +134,24 @@ class List extends Component {
             </div>
           </div>
         </div>
+
+        <div className="mb-3">
+          <label htmlFor="filterType" className="form-label">
+            Filter by Employee Type:
+          </label>
+          <select
+            id="filterType"
+            className="form-select"
+            onChange={(e) => this.filterEmployees(e.target.value)}
+          >
+            <option value="">All Employees</option>
+            <option value="FullTime">Full-Time</option>
+            <option value="PartTime">Part-Time</option>
+            <option value="Contract">Contract</option>
+            <option value="Seasonal">Seasonal</option>
+          </select>
+        </div>
+        
         <div className="row gx-4">
           <div className="col-sm-12 p-5">
             <EmployeeTable

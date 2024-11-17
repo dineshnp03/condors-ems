@@ -18,7 +18,8 @@ class List extends Component {
 
   // Getting the Employees data from Backend and changing the state in Mount LifeCyel
   async componentDidMount() {
-    this.loadEmployees();
+    await this.loadEmployees();
+    this.filterEmployees();
   }
 
   loadEmployees = async () => {

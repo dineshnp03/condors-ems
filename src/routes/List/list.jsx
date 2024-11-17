@@ -113,13 +113,28 @@ class List extends Component {
 
   filterEmployees = (type) => {
     const { employees } = this.state;
+
+    if (type !== undefined) {
+      const params = new URLSearchParams(window.location.search);
+      if (type) {
+        params.set("filter", type);
+      } else {
+        params.delete("filter");
+      }
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, "", newUrl);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const filterType = type || params.get("filter") || "";
+
     const filtered =
-      type === ""
+      filterType === ""
         ? employees
         : employees.filter(
           (employee) =>
             employee.EmployeeType &&
-            employee.EmployeeType.toLowerCase() === type.toLowerCase()
+            employee.EmployeeType.toLowerCase() === filterType.toLowerCase()
         );
 
     this.setState({ filteredEmployees: filtered });

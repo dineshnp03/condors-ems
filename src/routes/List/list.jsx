@@ -107,6 +107,20 @@ class List extends Component {
     }
   }
 
+  filterEmployees = (type) => {
+    const { employees } = this.state;
+    const filtered =
+      type === ""
+        ? employees
+        : employees.filter(
+          (employee) =>
+            employee.EmployeeType &&
+            employee.EmployeeType.toLowerCase() === type.toLowerCase()
+        );
+
+    this.setState({ filteredEmployees: filtered });
+  };
+
   render() {
     return (
       <>

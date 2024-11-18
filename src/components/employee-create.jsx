@@ -58,26 +58,6 @@ class EmployeeCreate extends Component {
       currentStatus,
     } = this.state;
     const pattern = /^[a-zA-Zà-žÀ-Ž' -]{1,50}$/;
-    debugger;
-    // this.setState({ errors: [], isValid: true });
-    // if (!firstName || !pattern.test(firstName)) {
-    //   this.setState((prevState) => ({
-    //     errors: [
-    //       ...prevState.errors,
-    //       "First Name is not a valid one. Provide alphabets",
-    //     ],
-    //     isValid: false,
-    //   }));
-    // }
-    // if (!lastName || !pattern.test(lastName)) {
-    //   this.setState((prevState) => ({
-    //     errors: [
-    //       ...prevState.errors,
-    //       "Last Name is not a valid one. Provide alphabets",
-    //     ],
-    //     isValid: false,
-    //   }));
-    // }
     let errors = [];
     let isValid = true;
 

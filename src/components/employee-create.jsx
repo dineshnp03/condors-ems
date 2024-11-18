@@ -39,7 +39,6 @@ class EmployeeCreate extends Component {
   };
 
   handleDataChange = (e) => {
-    debugger;
     this.setState({ [e.target.name]: e.target.value });
     if (e.target.name === "currentStatus") {
       this.setState({ currentStatus: JSON.parse(e.target.value) });
@@ -59,53 +58,68 @@ class EmployeeCreate extends Component {
       currentStatus,
     } = this.state;
     const pattern = /^[a-zA-Zà-žÀ-Ž' -]{1,50}$/;
-    this.setState({ errors: [], isValid: true });
+    debugger;
+    // this.setState({ errors: [], isValid: true });
+    // if (!firstName || !pattern.test(firstName)) {
+    //   this.setState((prevState) => ({
+    //     errors: [
+    //       ...prevState.errors,
+    //       "First Name is not a valid one. Provide alphabets",
+    //     ],
+    //     isValid: false,
+    //   }));
+    // }
+    // if (!lastName || !pattern.test(lastName)) {
+    //   this.setState((prevState) => ({
+    //     errors: [
+    //       ...prevState.errors,
+    //       "Last Name is not a valid one. Provide alphabets",
+    //     ],
+    //     isValid: false,
+    //   }));
+    // }
+    let errors = [];
+    let isValid = true;
+
     if (!firstName || !pattern.test(firstName)) {
-      this.setState((prevState) => ({
-        errors: [
-          ...prevState.errors,
-          "First Name is not a valid one. Provide alphabets",
-        ],
-        isValid: false,
-      }));
+      errors.push("First Name is not a valid one. Provide alphabets");
+      isValid = false;
     }
+
     if (!lastName || !pattern.test(lastName)) {
-      this.setState((prevState) => ({
-        errors: [
-          ...prevState.errors,
-          "Last Name is not a valid one. Provide alphabets",
-        ],
-        isValid: false,
-      }));
+      errors.push("Last Name is not a valid one. Provide alphabets");
+      isValid = false;
     }
-    if (this.state.isValid) {
-      const newEmployee = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        age: parseInt(age),
-        dateOfJoining: new Date(dateOfJoining).toISOString(),
-        title,
-        department,
-        EmployeeType,
-        currentStatus: currentStatus ?? true,
-      };
+    this.setState({ errors, isValid }, () => {
+      if (this.state.isValid) {
+        const newEmployee = {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          age: parseInt(age),
+          dateOfJoining: new Date(dateOfJoining).toISOString(),
+          title,
+          department,
+          EmployeeType,
+          currentStatus: currentStatus ?? true,
+        };
 
-      console.log(newEmployee);
+        console.log(newEmployee);
 
-      this.props.createEmployee(newEmployee);
-      this.setState({
-        firstName: "",
-        lastName: "",
-        age: 20,
-        dateOfJoining: "",
-        title: "",
-        department: "",
-        EmployeeType: "",
-        currentStatus: true,
-      });
-    } else {
-      alert("Please fill all the fields and provide valid data");
-    }
+        this.props.createEmployee(newEmployee);
+        this.setState({
+          firstName: "",
+          lastName: "",
+          age: 20,
+          dateOfJoining: "",
+          title: "",
+          department: "",
+          EmployeeType: "",
+          currentStatus: true,
+        });
+      } else {
+        alert("Please fill all the fields and provide valid data");
+      }
+    });
   };
 
   render() {
@@ -121,7 +135,6 @@ class EmployeeCreate extends Component {
       errors,
     } = this.state;
     const { employee } = this.props;
-    console.log(employee);
     return (
       <div>
         <h3>{employee ? "Update" : "Add"} Employee</h3>

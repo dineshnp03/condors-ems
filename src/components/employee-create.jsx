@@ -35,10 +35,15 @@ class EmployeeCreate extends Component {
       EmployeeType: employee.EmployeeType || "",
       currentStatus: employee.currentStatus ?? true,
     });
+    console.log(this.state.currentStatus);
   };
 
   handleDataChange = (e) => {
+    debugger;
     this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === "currentStatus") {
+      this.setState({ currentStatus: JSON.parse(e.target.value) });
+    }
   };
 
   handleAddEmployee = (e) => {
@@ -82,8 +87,10 @@ class EmployeeCreate extends Component {
         title,
         department,
         EmployeeType,
-        currentStatus: currentStatus === "true" ? true : false,
+        currentStatus: currentStatus ?? true,
       };
+
+      console.log(newEmployee);
 
       this.props.createEmployee(newEmployee);
       this.setState({

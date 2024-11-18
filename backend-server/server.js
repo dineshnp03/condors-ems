@@ -21,9 +21,10 @@ app.get('/', (req, res) => {
 });
 
 // Get all the Employee List from the DB collection
-const getAllEmployees = async() => {
+const getAllEmployees = async(_, {type}) => {
     try {
-        const getEmployees = await db.collection('employees').find({}).toArray();
+        const filter = type ? { EmployeeType: type } : {};
+        const getEmployees = await db.collection('employees').find(filter).toArray();
         if(!getEmployees.length) {
             throw new Error("No data found")
         }
@@ -59,7 +60,6 @@ const getEmployeesCount = async () => {
 const createEmployee = async (_, {newEmployee})=> {
     try {
 
-        console.log(newEmployee);
         const employeeAdd = {
             ...newEmployee,
             id: await getEmployeesCount()
@@ -92,7 +92,6 @@ const getEmployeeById = async (_, {id}) => {
 
 // Update Employee Details by passing the Id and EmployeeInput
 const updateEmployee = async (_, {id, newEmployee}) => {
-    console.log(newEmployee)
     try {
         const updateData = await db.collection('employees').updateOne({id: parseInt(id)}, {$set: newEmployee});
         console.log(updateData)
@@ -181,7 +180,6 @@ connectToDb((url, err) => {
             console.log(`Start Apollo server in http://localhost:${port}/graphql`);
             db = getDb();
         })
-        // console.log(db)
     } else {
         console.log(err)
     }

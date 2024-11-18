@@ -38,7 +38,6 @@ class EmployeeCreate extends Component {
   };
 
   handleDataChange = (e) => {
-    console.log(e.target);
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -83,7 +82,7 @@ class EmployeeCreate extends Component {
         title,
         department,
         EmployeeType,
-        currentStatus,
+        currentStatus: currentStatus === "true" ? true : false,
       };
 
       this.props.createEmployee(newEmployee);

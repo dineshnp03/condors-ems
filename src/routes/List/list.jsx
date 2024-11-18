@@ -1,31 +1,42 @@
 import { Component } from "react";
 import EmployeeTable from "../../components/employee-table";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
+const withRouterParam = (Component) => {
+  return (props) => (
+    <Component
+      {...props}
+      param={useParams()}
+      myloc={useLocation()}
+      mynav={useNavigate()}
+    />
+  );
+};
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       employees: [],
-      filteredEmployees: [],
       enableToast: false, // added bootstrap toasts
       toastMessage: {
         title: "",
         message: "",
       },
+      employeeType: "",
     };
   }
 
-  // Getting the Employees data from Backend and changing the state in Mount LifeCyel
-  async componentDidMount() {
+  componentDidMount() {
     this.loadEmployees();
-    this.filterEmployees();
   }
 
   loadEmployees = async () => {
+    const queryParam = new URLSearchParams(this.props.myloc?.search || "");
+    const employeeType = queryParam.get("type") || "";
+    this.setState({ employeeType });
     const query = `
     query {
-      employeeList {
+      employeeList(type: "${employeeType}") {
         id
         firstName
         lastName
@@ -53,11 +64,13 @@ class List extends Component {
       const result = await response.json();
 
       if (result.data && result.data.employeeList) {
-        this.setState({ 
+        this.setState({
           employees: result.data.employeeList,
-          filteredEmployees: result.data.employeeList,
         });
       } else {
+        this.setState({
+          employees: [],
+        });
         console.log(
           "Error: employeeList is undefined",
           result.errors || "No errors returned"
@@ -101,8 +114,11 @@ class List extends Component {
       console.log("Error deleting employee:", error.message);
     }
   };
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.myloc?.search !== this.props.myloc?.search) {
+      this.loadEmployees();
+    }
 
-  componentDidUpdate(prevState) {
     if (prevState.enableToast !== this.state.enableToast) {
       setTimeout(() => {
         this.setState({
@@ -112,33 +128,10 @@ class List extends Component {
     }
   }
 
-  filterEmployees = (type) => {
-    const { employees } = this.state;
-
-    if (type !== undefined) {
-      const params = new URLSearchParams(window.location.search);
-      if (type) {
-        params.set("filter", type);
-      } else {
-        params.delete("filter");
-      }
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({}, "", newUrl);
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const filterType = type || params.get("filter") || "";
-
-    const filtered =
-      filterType === ""
-        ? employees
-        : employees.filter(
-          (employee) =>
-            employee.EmployeeType &&
-            employee.EmployeeType.toLowerCase() === filterType.toLowerCase()
-        );
-
-    this.setState({ filteredEmployees: filtered });
+  filterEmployees = (event) => {
+    const type = event.target.value;
+    this.setState({ employeeType: type });
+    this.props.mynav(`/list?type=${type}`);
   };
 
   render() {
@@ -169,14 +162,15 @@ class List extends Component {
           </div>
         </div>
 
-        <div className="mb-3">
+        <div className="my-3 ">
           <label htmlFor="filterType" className="form-label">
             Filter by Employee Type:
           </label>
           <select
             id="filterType"
             className="form-select"
-            onChange={(e) => this.filterEmployees(e.target.value)}
+            value={this.state.employeeType}
+            onChange={this.filterEmployees}
           >
             <option value="">All Employees</option>
             <option value="FullTime">Full-Time</option>
@@ -185,12 +179,12 @@ class List extends Component {
             <option value="Seasonal">Seasonal</option>
           </select>
         </div>
-        
+
         <div className="row gx-4">
           <div className="col-sm-12 p-5">
             <EmployeeTable
               deleteEmployee={this.deleteEmployee}
-              employees={this.state.filteredEmployees}
+              employees={this.state.employees}
             />
           </div>
           <Outlet />
@@ -200,4 +194,4 @@ class List extends Component {
   }
 }
 
-export default List;
+export default withRouterParam(List);

@@ -24,7 +24,7 @@ input EmployeeInput {
 }
 
 type Query {
-  employeeList: [Employee]
+  employeeList(type: String): [Employee]
   employeeDetail(id: Int): Employee
 }
 

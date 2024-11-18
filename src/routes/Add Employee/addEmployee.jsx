@@ -20,8 +20,6 @@ class AddEmployee extends Component {
     const { id } = this.props.param;
     if (id) {
       this.loadEmployeeDetails(id);
-      console.log(this.state.enableToast);
-      console.log(this.state.redirect);
     }
   }
 
@@ -74,7 +72,6 @@ class AddEmployee extends Component {
 
   //  Employee creation function getting the newEmployee Data from the EmployeeCreate component
   createEmployee = (newEmployee) => {
-    console.log(newEmployee);
     const addQuery = this.state.isEdit
       ? `
       mutation updateEmployee($id: Int!, $newEmployee: EmployeeInput!) {
@@ -123,7 +120,6 @@ class AddEmployee extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (
           this.state.isEdit
             ? data.data.updateEmployee
@@ -140,7 +136,6 @@ class AddEmployee extends Component {
   };
 
   componentDidUpdate(prevState, prevProps) {
-    console.log(prevProps, prevState);
     if (prevProps.enableToast !== this.state.enableToast) {
       setTimeout(() => {
         this.setState({
@@ -183,7 +178,7 @@ class AddEmployee extends Component {
             </div>
           </div>
         </div>
-        <div className="row gx-4">
+        <div className="row gx-4 my-4">
           <center>
             <div className="col-lg-6 col-sm-12">
               <EmployeeCreate

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Condors EMS",
+  "name": "Employee Management System created using React and data handled using NodeJs",
   "icons": [
     {
       "src": "favicon.ico",

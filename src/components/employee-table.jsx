@@ -1,6 +1,17 @@
 import { Component } from "react";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 class EmployeeTable extends Component {
+  handleDelete(employee) {
+    if (
+      window.confirm(`
+      Are you sure you want to delete ${employee.lastName}, ${employee.firstName} from the list?
+      `)
+    ) {
+      this.props.deleteEmployee(employee.id);
+    }
+  }
   render() {
     const { employees } = this.props;
 
@@ -19,6 +30,7 @@ class EmployeeTable extends Component {
                 <th>Department</th>
                 <th>Employee Type</th>
                 <th>Current Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +51,32 @@ class EmployeeTable extends Component {
                     <td>{employee.department}</td>
                     <td>{employee.EmployeeType}</td>
                     <td>{employee.currentStatus ? "Working" : "Retired"}</td>
+                    <td>
+                      <Button variant="primary">
+                        {" "}
+                        <Link
+                          className="text-decoration-none text-reset"
+                          to={`/editEmployee/${employee.id}`}
+                        >
+                          Edit
+                        </Link>
+                      </Button>{" "}
+                      <Button variant="secondary">
+                        <Link
+                          className="text-decoration-none text-reset"
+                          to={`/list/${employee.id}`}
+                        >
+                          View
+                        </Link>
+                      </Button>{" "}
+                      <Button
+                        variant="danger"
+                        onClick={() => this.handleDelete(employee)}
+                      >
+                        Delete
+                      </Button>{" "}
+                       
+                    </td>
                   </tr>
                 ))
               ) : (

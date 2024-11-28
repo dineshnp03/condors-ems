@@ -4,7 +4,12 @@
 // Priyank Ghanshyambhai Padshala
 
 import './App.css';
-import EmployeeDirectory from './components/employee-directory';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './routes/Navbar/navbar';
+import Home from './routes/Home/home';
+import List from './routes/List/list';
+import AddEmployee from './routes/Add Employee/addEmployee';
+import EmployeeDetail from './components/employee-detail';
 
 
 function App() {
@@ -18,7 +23,16 @@ function App() {
           </div>
         </nav>
      <div className="container-fluid p-4">
-          <EmployeeDirectory />
+     <Routes>
+        <Route path='/' element={<Navbar />} >
+          <Route index element={<Home />}/>
+          <Route path='/list' element={<List />}>
+            <Route path=':id' element={<EmployeeDetail/>} />
+          </Route>
+          <Route path='/addEmployee' element={<AddEmployee />}/>
+          <Route path='/editEmployee/:id' element={<AddEmployee />}/>
+        </Route>
+      </Routes>
      </div>
     </div>
   );

@@ -21,29 +21,111 @@ app.get('/', (req, res) => {
 });
 
 // Get all the Employee List from the DB collection
-const getAllEmployees = async() => {
-    const getEmployees = await db.collection('employees').find({}).toArray();
-    return getEmployees;
+const getAllEmployees = async(_, {type}) => {
+    try {
+        const filter = type ? { EmployeeType: type } : {};
+        const getEmployees = await db.collection('employees').find(filter).toArray();
+        if(!getEmployees.length) {
+            throw new Error("No data found")
+        }
+        return getEmployees;
+        
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }
 
 //  Get the Employees Count from the DB collection
 const getEmployeesCount = async () => {
-    const getEmployeesCount = await db.collection('employees').countDocuments();
-    return getEmployeesCount;
+    try {
+
+        const getEmployeesCount = await db.collection("counters")
+        .findOneAndUpdate(
+          { name: 'employees' },
+          { $inc: { count: 1 } },
+          { returnOriginal: false, upsert: true }
+        );
+        console.log(getEmployeesCount)
+        if(!getEmployeesCount) {
+            throw new Error("Error while fetching count");
+        }
+        return getEmployeesCount.count;
+    } catch(error) {
+        throw new Error(error.message);
+    }
 }
 
 
 // Create new Employee to the DB
 const createEmployee = async (_, {newEmployee})=> {
-    console.log(newEmployee);
-    const employeeAdd = {
-        ...newEmployee,
-        id: await getEmployeesCount() + 1
+    try {
+
+        const employeeAdd = {
+            ...newEmployee,
+            id: await getEmployeesCount()
+        }
+        console.log(employeeAdd)
+        const insertNewEmployee = await db.collection('employees').insertOne(employeeAdd);
+        const insertedEmployee = await db.collection('employees').findOne({_id: insertNewEmployee.insertedId});
+        return insertedEmployee;
+    } catch(error) {
+        console.log('Error while adding new employee');
+        throw new Error(error.message);
     }
-    const insertNewEmployee = await db.collection('employees').insertOne(employeeAdd);
-    const insertedEmployee = await db.collection('employees').findOne({_id: insertNewEmployee.insertedId});
-    return insertedEmployee;
 }
+
+// Get Employee Details by passing the ID
+const getEmployeeById = async (_, {id}) => {
+    try {
+        const employeeDetail = await db.collection('employees').findOne({id: parseInt(id)});
+
+        if(!employeeDetail) {
+            throw new Error('Employee Detail not found, Check admin');
+        }
+        return employeeDetail;
+    } catch(error) {
+        console.log('Error while fetching employee details');
+        throw new Error(error.message);
+    }
+
+}
+
+// Update Employee Details by passing the Id and EmployeeInput
+const updateEmployee = async (_, {id, newEmployee}) => {
+    try {
+        const updateData = await db.collection('employees').updateOne({id: parseInt(id)}, {$set: newEmployee});
+        console.log(updateData)
+        if (updateData.matchedCount === 0) {
+            throw new Error('Employee not found, please check the Id.');
+        }
+        const updatedEmployee = await db.collection('employees').findOne({id: parseInt(id)});
+        if(!updatedEmployee) {
+            throw new Error('Employee Detail not found, Check admin');
+        }
+        return updatedEmployee;
+    } catch(error) {
+        console.log('Error while updating employee details');
+        throw new Error(error.message);
+    }
+}
+
+
+// Delete Employee Details by passing the Id
+const deleteEmployee = async (_, {id}) => {
+    try {
+        const deletedEmployee = await db.collection('employees').findOne({id: parseInt(id)});
+        if(!deletedEmployee) {
+            throw new Error('Employee Detail not found, Check admin');
+        }
+        const result = await db.collection('employees').deleteOne({id: parseInt(id)});
+        console.log(result)
+        return result.deletedCount > 0;
+    } catch(error) {
+        console.log('Error while deleting employee details');
+        throw new Error(error.message);
+    }
+}
+
 
 //  Creating the custom scalar Date Type using GraphQlScalarType
 const GraphQLDateResolver = new GraphQLScalarType({
@@ -65,10 +147,13 @@ const typeDefs = await readFile('./schema.graphql', 'utf8');
 //  Defining the resolvers - which acts as controllers to the GraphQL
 const resolvers = {
     Query: {
-        employeeList: getAllEmployees
+        employeeList: getAllEmployees,
+        employeeDetail: getEmployeeById,
     },
     Mutation: {
-        createEmployee: createEmployee
+        createEmployee: createEmployee,
+        updateEmployee,
+        deleteEmployee
     },
     GraphQLDate: GraphQLDateResolver
 };
@@ -95,7 +180,6 @@ connectToDb((url, err) => {
             console.log(`Start Apollo server in http://localhost:${port}/graphql`);
             db = getDb();
         })
-        // console.log(db)
     } else {
         console.log(err)
     }

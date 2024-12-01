@@ -53,7 +53,6 @@ class EmployeeCreate extends Component {
     }
   };
 
-  // Function to calculate age from Date of Birth (DOB)
   calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -64,7 +63,7 @@ class EmployeeCreate extends Component {
       monthDifference < 0 ||
       (monthDifference === 0 && today.getDate() < birthDate.getDate())
     ) {
-      return age - 1; // If the birthday hasn't occurred yet this year
+      return age - 1;
     }
     return age;
   };

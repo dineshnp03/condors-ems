@@ -29,9 +29,6 @@ const getAllEmployees = async(_, {type, retirementFilter}) => {
             throw new Error("No data found")
         }
 
-        
-    // Calculate retirement details for each employee
-    // const today = new Date();
         const getUpdatedEmployees = getEmployees
             .map((employee) => {
                 const retirementDetails = calculateRetirementDetails(employee);
@@ -39,7 +36,6 @@ const getAllEmployees = async(_, {type, retirementFilter}) => {
             })
             .filter((employee) => {
                 if (retirementFilter) {
-                    // O employees with upcoming retirements
                     return employee.retirementDetails?.isUpcoming || false;
                 }
                 return true;
@@ -149,12 +145,12 @@ const calculateRetirementDetails = (employee) => {
     const retirementAge = 70; 
     const today = new Date();
     
-    // Calculate exact age from DOB
+    // Caluclating the exact age
     const birthDate = new Date(employee.dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
+    let age = employee.age;
     const monthDifference = today.getMonth() - birthDate.getMonth();
 
-    // Adjust for the month difference (if the birthday hasn't occurred this year yet)
+    // Adjusting the month difference if the birthday hasn't occurred this year yet
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--; 
     }
@@ -165,11 +161,11 @@ const calculateRetirementDetails = (employee) => {
         return null;
     }
 
-    // Calculate exact retirement date
+    // Calculating the retirement date
     const retirementDate = new Date(birthDate);
     retirementDate.setFullYear(birthDate.getFullYear() + retirementAge);
 
-    // Calculate time remaining for retirement
+    // Calculating the remaining days, months and year(s) for retirement
     const timeDiff = retirementDate - today;
     const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     const monthsLeft = Math.floor(daysLeft / 30.44) % 12;

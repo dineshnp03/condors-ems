@@ -181,37 +181,39 @@ class List extends Component {
           </div>
         </div>
 
-        <div className="my-3 col-sm-12 col-md-4">
-          <label htmlFor="filterType" className="form-label">
-            Filter by Employee Type:
-          </label>
-          <select
-            id="filterType"
-            className="form-select"
-            value={this.state.employeeType}
-            onChange={this.filterEmployees}
-          >
-            <option value="">All Employees</option>
-            <option value="FullTime">Full-Time</option>
-            <option value="PartTime">Part-Time</option>
-            <option value="Contract">Contract</option>
-            <option value="Seasonal">Seasonal</option>
-          </select>
-        </div>
+        <div className="row gx-4 px-5 justify-content-between">
+          <div className="my-3 col-sm-12 col-md-4">
+            <label htmlFor="filterType" className="form-label">
+              Filter by Employee Type:
+            </label>
+            <select
+              id="filterType"
+              className="form-select"
+              value={this.state.employeeType}
+              onChange={this.filterEmployees}
+            >
+              <option value="">All Employees</option>
+              <option value="FullTime">Full-Time</option>
+              <option value="PartTime">Part-Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Seasonal">Seasonal</option>
+            </select>
+          </div>
 
-        <div className="col-sm-12 col-md-6 d-flex align-items-center">
-          <label htmlFor="retirementFileter" className="form-label">
-            Filter by Upcoming Retirement Employees:
-          </label>
+          <div className="col-sm-12 col-md-6 my-3">
+            <label htmlFor="retirementFileter" className="form-label">
+              Filter by Upcoming Retirement Employees:
+            </label>
 
-          <Form.Check
-            type="switch"
-            className="ms-3"
-            id="custom-switch"
-            label=""
-            defaultChecked={this.state.retirementFilter}
-            onChange={this.toggleUpcomingRetirements}
-          />
+            <Form.Check
+              type="switch"
+              className="ms-3"
+              id="custom-switch"
+              label=""
+              defaultChecked={this.state.retirementFilter}
+              onChange={this.toggleUpcomingRetirements}
+            />
+          </div>
         </div>
 
         <div className="row gx-4">

@@ -21,14 +21,30 @@ app.get('/', (req, res) => {
 });
 
 // Get all the Employee List from the DB collection
-const getAllEmployees = async(_, {type}) => {
+const getAllEmployees = async(_, {type, retirementFilter}) => {
     try {
         const filter = type ? { EmployeeType: type } : {};
         const getEmployees = await db.collection('employees').find(filter).toArray();
         if(!getEmployees.length) {
             throw new Error("No data found")
         }
-        return getEmployees;
+
+        
+    // Calculate retirement details for each employee
+    // const today = new Date();
+        const getUpdatedEmployees = getEmployees
+            .map((employee) => {
+                const retirementDetails = calculateRetirementDetails(employee);
+                return { ...employee, retirementDetails };
+            })
+            .filter((employee) => {
+                if (retirementFilter) {
+                    // O employees with upcoming retirements
+                    return employee.retirementDetails?.isUpcoming || false;
+                }
+                return true;
+            });
+        return getUpdatedEmployees;
         
     } catch (error) {
         throw new Error(error.message)
@@ -82,7 +98,8 @@ const getEmployeeById = async (_, {id}) => {
         if(!employeeDetail) {
             throw new Error('Employee Detail not found, Check admin');
         }
-        return employeeDetail;
+        const retirementDetails = calculateRetirementDetails(employeeDetail);
+        return { ...employeeDetail, retirementDetails };
     } catch(error) {
         console.log('Error while fetching employee details');
         throw new Error(error.message);
@@ -125,6 +142,55 @@ const deleteEmployee = async (_, {id}) => {
         throw new Error(error.message);
     }
 }
+
+
+// Calculating the upcoming Retirement Details
+const calculateRetirementDetails = (employee) => {
+    const retirementAge = 70; 
+    const today = new Date();
+    
+    // Calculate exact age from DOB
+    const birthDate = new Date(employee.dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    // Adjust for the month difference (if the birthday hasn't occurred this year yet)
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+        age--; 
+    }
+
+    const yearsLeftForRetirement = retirementAge - age;
+
+    if (yearsLeftForRetirement <= 0 || !employee.currentStatus) {
+        return null;
+    }
+
+    // Calculate exact retirement date
+    const retirementDate = new Date(birthDate);
+    retirementDate.setFullYear(birthDate.getFullYear() + retirementAge);
+
+    // Calculate time remaining for retirement
+    const timeDiff = retirementDate - today;
+    const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const monthsLeft = Math.floor(daysLeft / 30.44) % 12;
+    const yearsLeft = Math.floor(daysLeft / 365);
+
+    const isUpcoming = (() => {
+        const diffInMonths =
+            (retirementDate.getFullYear() - today.getFullYear()) * 12 +
+            (retirementDate.getMonth() - today.getMonth());
+        return diffInMonths <= 6 && diffInMonths >= 0;
+    })();
+
+    return {
+        dateOfRetirement: retirementDate,
+        yearsLeft: `${yearsLeft} years`,
+        monthsLeft: `${monthsLeft} months`,
+        daysLeft: `${daysLeft % 30} days`,
+        isUpcoming
+    };
+};
+
 
 
 //  Creating the custom scalar Date Type using GraphQlScalarType

@@ -7,6 +7,7 @@ class EmployeeCreate extends Component {
       firstName: "",
       lastName: "",
       age: "",
+      dob: "",
       dateOfJoining: "",
       title: "",
       department: "",
@@ -28,6 +29,7 @@ class EmployeeCreate extends Component {
       firstName: employee.firstName || "",
       lastName: employee.lastName || "",
       age: employee.age || "",
+      dob: new Date(employee.dob).toISOString().slice(0, 10) || "",
       dateOfJoining:
         new Date(employee.dateOfJoining).toISOString().slice(0, 10) || "",
       title: employee.title || "",
@@ -39,10 +41,32 @@ class EmployeeCreate extends Component {
   };
 
   handleDataChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
     if (e.target.name === "currentStatus") {
       this.setState({ currentStatus: JSON.parse(e.target.value) });
+    } else if (e.target.name === "dob") {
+      this.setState({
+        dob: e.target.value,
+        age: this.calculateAge(e.target.value),
+      });
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
     }
+  };
+
+  // Function to calculate age from Date of Birth (DOB)
+  calculateAge = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      return age - 1; // If the birthday hasn't occurred yet this year
+    }
+    return age;
   };
 
   handleAddEmployee = (e) => {
@@ -51,6 +75,7 @@ class EmployeeCreate extends Component {
       firstName,
       lastName,
       age,
+      dob,
       dateOfJoining,
       title,
       department,
@@ -76,6 +101,7 @@ class EmployeeCreate extends Component {
           firstName: firstName.trim(),
           lastName: lastName.trim(),
           age: parseInt(age),
+          dob: new Date(dob).toISOString(),
           dateOfJoining: new Date(dateOfJoining).toISOString(),
           title,
           department,
@@ -90,6 +116,7 @@ class EmployeeCreate extends Component {
           firstName: "",
           lastName: "",
           age: 20,
+          dob: "",
           dateOfJoining: "",
           title: "",
           department: "",
@@ -107,6 +134,7 @@ class EmployeeCreate extends Component {
       firstName,
       lastName,
       age,
+      dob,
       dateOfJoining,
       title,
       department,
@@ -162,17 +190,29 @@ class EmployeeCreate extends Component {
             />
           </div>
           <div className="mb-3">
+            <label className="form-label">Date of Joining:</label>
+            <input
+              type="date"
+              name="dob"
+              id="dob"
+              value={dob}
+              onChange={this.handleDataChange}
+              disabled={!!employee}
+              className="form-control"
+              max={new Date().toISOString().slice(0, 10)}
+            />
+          </div>
+          <div className="mb-3">
             <label className="form-label">Age:</label>
             <input
+              disabled
               type="number"
               name="age"
               id="age"
               min={20}
-              max={70}
+              max={69}
               placeholder="Age"
               value={age}
-              onChange={this.handleDataChange}
-              disabled={!!employee}
               className="form-control"
               required
             />

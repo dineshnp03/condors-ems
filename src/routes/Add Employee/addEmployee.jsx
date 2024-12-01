@@ -31,6 +31,7 @@ class AddEmployee extends Component {
           firstName
           lastName
           age
+          dob
           dateOfJoining
           title
           department
@@ -80,6 +81,7 @@ class AddEmployee extends Component {
           firstName
           lastName
           age
+          dob
           dateOfJoining
           title
           department
@@ -95,6 +97,7 @@ class AddEmployee extends Component {
         firstName
         lastName
         age
+        dob
         dateOfJoining
         title
         department

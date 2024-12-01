@@ -5,17 +5,28 @@ type Employee {
   firstName: String
   lastName: String
   age: Int
+  dob: GraphQLDate
   dateOfJoining: GraphQLDate
   title: String
   department: String
   EmployeeType: String
   currentStatus: Boolean
+  retirementDetails: RetirementDetails
+}
+
+type RetirementDetails {
+  dateOfRetirement: GraphQLDate
+  yearsLeft: String
+  monthsLeft: String
+  daysLeft: String
+  isUpcoming: Boolean
 }
 
 input EmployeeInput {
   firstName: String
   lastName: String
   age: Int
+  dob: GraphQLDate
   dateOfJoining: GraphQLDate
   title: String
   department: String
@@ -24,7 +35,7 @@ input EmployeeInput {
 }
 
 type Query {
-  employeeList(type: String): [Employee]
+  employeeList(type: String, retirementFilter: Boolean): [Employee]
   employeeDetail(id: Int): Employee
 }
 

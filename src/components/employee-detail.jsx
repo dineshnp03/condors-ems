@@ -23,17 +23,24 @@ class EmployeeDetail extends Component {
 
     try {
       const query = `
-    query{
-    employeeDetail(id: ${id}) {
-    id
-    firstName
-    lastName
-    age
-    dateOfJoining
-    title
-    department
-    EmployeeType
-    currentStatus}}`;
+        query{
+        employeeDetail(id: ${id}) {
+        id
+        firstName
+        lastName
+        age
+        dateOfJoining
+        title
+        department
+        EmployeeType
+        currentStatus
+         retirementDetails {
+            dateOfRetirement
+            yearsLeft
+            monthsLeft
+            daysLeft
+            isUpcoming
+          } }}`;
 
       const response = await fetch("/graphql", {
         method: "POST",
@@ -106,6 +113,26 @@ class EmployeeDetail extends Component {
               <strong>Current Status:</strong>{" "}
               {employee.currentStatus ? "Working" : "Retired"}
             </p>
+            {employee.currentStatus && (
+              <>
+                <p>
+                  <strong>Upcoming Retirement Date:</strong>{" "}
+                  {employee.retirementDetails &&
+                  employee.retirementDetails.dateOfRetirement
+                    ? new Date(
+                        employee.retirementDetails.dateOfRetirement
+                      ).toLocaleDateString("en-CA")
+                    : ""}
+                </p>
+                <p>
+                  <strong>Upcoming Retirement Duration:</strong>{" "}
+                  {employee.retirementDetails &&
+                  employee.retirementDetails.dateOfRetirement
+                    ? `${employee.retirementDetails.yearsLeft}, ${employee.retirementDetails.monthsLeft}, ${employee.retirementDetails.daysLeft}`
+                    : ""}
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>

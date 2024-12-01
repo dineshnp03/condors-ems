@@ -65,7 +65,7 @@ class EmployeeTable extends Component {
   }
 
   render() {
-    const { employees } = this.props;
+    const { employees, retirementFilter } = this.props;
 
     return (
       <>
@@ -92,6 +92,7 @@ class EmployeeTable extends Component {
                 <th>Department</th>
                 <th>Employee Type</th>
                 <th>Current Status</th>
+                {retirementFilter && <th>Upcoming Retirement Date</th>}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -113,6 +114,15 @@ class EmployeeTable extends Component {
                     <td>{employee.department}</td>
                     <td>{employee.EmployeeType}</td>
                     <td>{employee.currentStatus ? "Working" : "Retired"}</td>
+                    {retirementFilter && (
+                      <td>
+                        {employee.retirementDetails?.isUpcoming
+                          ? new Date(
+                              employee.retirementDetails.dateOfRetirement
+                            ).toLocaleDateString("en-CA")
+                          : "N/A"}
+                      </td>
+                    )}
                     <td>
                       <Button variant="primary">
                         {" "}

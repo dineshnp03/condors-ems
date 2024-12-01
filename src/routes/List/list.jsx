@@ -1,6 +1,7 @@
 import { Component } from "react";
 import EmployeeTable from "../../components/employee-table";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Form } from "react-bootstrap";
 
 const withRouterParam = (Component) => {
   return (props) => (
@@ -17,7 +18,8 @@ class List extends Component {
     super(props);
     this.state = {
       employees: [],
-      enableToast: false, // added bootstrap toasts
+      enableToast: false,
+      retirementFilter: false,
       toastMessage: {
         title: "",
         message: "",
@@ -36,7 +38,7 @@ class List extends Component {
     this.setState({ employeeType });
     const query = `
     query {
-      employeeList(type: "${employeeType}") {
+      employeeList(type: "${employeeType}", retirementFilter: ${this.state.retirementFilter}) {
         id
         firstName
         lastName
@@ -46,6 +48,13 @@ class List extends Component {
         department
         EmployeeType
         currentStatus
+        retirementDetails {
+          dateOfRetirement
+          yearsLeft
+          monthsLeft
+          daysLeft
+          isUpcoming
+        }
       }
     }
   `;
@@ -119,6 +128,10 @@ class List extends Component {
       this.loadEmployees();
     }
 
+    if (prevState.retirementFilter !== this.state.retirementFilter) {
+      this.loadEmployees();
+    }
+
     if (prevState.enableToast !== this.state.enableToast) {
       setTimeout(() => {
         this.setState({
@@ -127,6 +140,12 @@ class List extends Component {
       }, 3000);
     }
   }
+
+  toggleUpcomingRetirements = () => {
+    this.setState((prevState) => ({
+      retirementFilter: !prevState.retirementFilter,
+    }));
+  };
 
   filterEmployees = (event) => {
     const type = event.target.value;
@@ -162,7 +181,7 @@ class List extends Component {
           </div>
         </div>
 
-        <div className="my-3 ">
+        <div className="my-3 col-sm-12 col-md-4">
           <label htmlFor="filterType" className="form-label">
             Filter by Employee Type:
           </label>
@@ -180,11 +199,27 @@ class List extends Component {
           </select>
         </div>
 
+        <div className="col-sm-12 col-md-6 d-flex align-items-center">
+          <label htmlFor="retirementFileter" className="form-label">
+            Filter by Upcoming Retirement Employees:
+          </label>
+
+          <Form.Check
+            type="switch"
+            className="ms-3"
+            id="custom-switch"
+            label=""
+            defaultChecked={this.state.retirementFilter}
+            onChange={this.toggleUpcomingRetirements}
+          />
+        </div>
+
         <div className="row gx-4">
           <div className="col-sm-12 p-5">
             <EmployeeTable
               deleteEmployee={this.deleteEmployee}
               employees={this.state.employees}
+              retirementFilter={this.state.retirementFilter}
             />
           </div>
           <Outlet />

@@ -198,7 +198,16 @@ class EmployeeCreate extends Component {
               onChange={this.handleDataChange}
               disabled={!!employee}
               className="form-control"
-              max={new Date().toISOString().slice(0, 10)}
+              max={new Date(
+                new Date().setFullYear(new Date().getFullYear() - 20)
+              )
+                .toISOString()
+                .slice(0, 10)}
+              min={new Date(
+                new Date().setFullYear(new Date().getFullYear() - 70)
+              )
+                .toISOString()
+                .slice(0, 10)}
             />
           </div>
           <div className="mb-3">

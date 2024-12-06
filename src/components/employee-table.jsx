@@ -124,23 +124,18 @@ class EmployeeTable extends Component {
                       </td>
                     )}
                     <td>
-                      <Button variant="primary">
-                        {" "}
-                        <Link
-                          className="text-decoration-none text-reset"
-                          to={`/editEmployee/${employee.id}`}
-                        >
-                          Edit
-                        </Link>
-                      </Button>{" "}
-                      <Button variant="secondary">
-                        <Link
-                          className="text-decoration-none text-reset"
-                          to={`/list/${employee.id}`}
-                        >
-                          View
-                        </Link>
-                      </Button>{" "}
+                      <Link
+                        className="text-decoration-none text-reset"
+                        to={`/editEmployee/${employee.id}`}
+                      >
+                        <Button variant="primary">Edit</Button>
+                      </Link>{" "}
+                      <Link
+                        className="text-decoration-none text-reset"
+                        to={`/list/${employee.id}`}
+                      >
+                        <Button variant="secondary">View</Button>
+                      </Link>{" "}
                       <Button
                         variant="danger"
                         onClick={() => this.handleDelete(employee)}

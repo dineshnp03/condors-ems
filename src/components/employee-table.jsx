@@ -132,7 +132,7 @@ class EmployeeTable extends Component {
                       </Link>{" "}
                       <Link
                         className="text-decoration-none text-reset"
-                        to={`/list/${employee.id}`}
+                        to={`/viewEmployee/${employee.id}`}
                       >
                         <Button variant="secondary">View</Button>
                       </Link>{" "}

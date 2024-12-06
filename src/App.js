@@ -26,9 +26,8 @@ function App() {
      <Routes>
         <Route path='/' element={<Navbar />} >
           <Route index element={<Home />}/>
-          <Route path='/list' element={<List />}>
-            <Route path=':id' element={<EmployeeDetail/>} />
-          </Route>
+          <Route path='/list' element={<List />}/>
+          <Route path='/viewEmployee/:id' element={<EmployeeDetail/>} />
           <Route path='/addEmployee' element={<AddEmployee />}/>
           <Route path='/editEmployee/:id' element={<AddEmployee />}/>
         </Route>

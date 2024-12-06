@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const withParamsRoute = (Component) => {
   return (props) => <Component {...props} param={useParams()} />;
@@ -84,58 +87,145 @@ class EmployeeDetail extends Component {
       return <h3 className="warning"> {error} </h3>;
     }
     return (
-      <div className="container d-flex  flex-column px-5">
-        <h2>Employee Detail</h2>
+      <Container className="py-5">
+        <h2 className="mb-3">Employee Detail</h2>
         {employee && (
-          <div>
-            <p>
-              <strong>Name:</strong> {employee.firstName} {employee.lastName}
-            </p>
-            <p>
-              <strong>Age:</strong> {employee.age}
-            </p>
-            <p>
-              <strong>Date of Joining:</strong>{" "}
-              {employee.dateOfJoining
-                ? new Date(employee.dateOfJoining).toLocaleDateString("en-CA")
-                : ""}
-            </p>
-            <p>
-              <strong>Title:</strong> {employee.title}
-            </p>
-            <p>
-              <strong>Department:</strong> {employee.department}
-            </p>
-            <p>
-              <strong>Employee Type:</strong> {employee.EmployeeType}
-            </p>
-            <p>
-              <strong>Current Status:</strong>{" "}
-              {employee.currentStatus ? "Working" : "Retired"}
-            </p>
+          <>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Employee First Name:</strong>
+                </p>
+              </Col>
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.firstName}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Employee Last Name:</strong>
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.lastName}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Age:</strong>
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.age}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Date of Joining:</strong>
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  {employee.dateOfJoining
+                    ? new Date(employee.dateOfJoining).toLocaleDateString(
+                        "en-CA"
+                      )
+                    : ""}
+                </p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Title:</strong>{" "}
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.title}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Department:</strong>{" "}
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.department}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Employee Type:</strong>{" "}
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.EmployeeType}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} lg={4} md={6}>
+                <p>
+                  <strong>Current Status:</strong>{" "}
+                </p>
+              </Col>
+
+              <Col xs={12} lg={4} md={6}>
+                <p>{employee.currentStatus ? "Working" : "Retired"}</p>
+              </Col>
+            </Row>
+
             {employee.currentStatus && (
               <>
-                <p>
-                  <strong>Upcoming Retirement Date:</strong>{" "}
-                  {employee.retirementDetails &&
-                  employee.retirementDetails.dateOfRetirement
-                    ? new Date(
-                        employee.retirementDetails.dateOfRetirement
-                      ).toLocaleDateString("en-CA")
-                    : ""}
-                </p>
-                <p>
-                  <strong>Upcoming Retirement Duration:</strong>{" "}
-                  {employee.retirementDetails &&
-                  employee.retirementDetails.dateOfRetirement
-                    ? `${employee.retirementDetails.yearsLeft}, ${employee.retirementDetails.monthsLeft}, ${employee.retirementDetails.daysLeft}`
-                    : ""}
-                </p>
+                <Row>
+                  <Col xs={12} lg={4} md={6}>
+                    <p>
+                      <strong>Upcoming Retirement Date:</strong>{" "}
+                    </p>
+                  </Col>
+
+                  <Col xs={12} lg={4} md={6}>
+                    <p>
+                      {employee.retirementDetails &&
+                      employee.retirementDetails.dateOfRetirement
+                        ? new Date(
+                            employee.retirementDetails.dateOfRetirement
+                          ).toLocaleDateString("en-CA")
+                        : ""}
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} lg={4} md={6}>
+                    <p>
+                      <strong>Upcoming Retirement Duration:</strong>{" "}
+                    </p>
+                  </Col>
+
+                  <Col xs={12} lg={4} md={6}>
+                    <p>
+                      {employee.retirementDetails &&
+                      employee.retirementDetails.dateOfRetirement
+                        ? `${employee.retirementDetails.yearsLeft}, ${employee.retirementDetails.monthsLeft}, ${employee.retirementDetails.daysLeft}`
+                        : ""}
+                    </p>
+                  </Col>
+                </Row>
               </>
             )}
-          </div>
+          </>
         )}
-      </div>
+      </Container>
     );
   }
 }

@@ -189,7 +189,7 @@ class EmployeeCreate extends Component {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Date of Joining:</label>
+            <label className="form-label">Date of Birth:</label>
             <input
               type="date"
               name="dob"

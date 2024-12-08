@@ -221,8 +221,6 @@ class List extends Component {
             />
           </Card.Body>
         </Card>
-
-        <Outlet />
       </>
     );
   }

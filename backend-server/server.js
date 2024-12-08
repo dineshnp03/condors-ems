@@ -165,10 +165,10 @@ const calculateRetirementDetails = (employee) => {
     const retirementDate = new Date(birthDate);
     retirementDate.setFullYear(birthDate.getFullYear() + retirementAge);
 
-    // Calculating the remaining days, months and year(s) for retirement
+    // Calculating the remaining days, months and years for the retirement
     const timeDiff = retirementDate - today;
     const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    const monthsLeft = Math.floor(daysLeft / 30.44) % 12;
+    const monthsLeft = Math.floor(daysLeft / 30.44) % 12; // 30.44 = Average no. of. days in a year
     const yearsLeft = Math.floor(daysLeft / 365);
 
     const isUpcoming = (() => {

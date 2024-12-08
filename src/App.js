@@ -17,14 +17,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
   return (
     <div className="App">
-    <nav className="navbar navbar-primary bg-dark mb-3">
-          <div className="container-fluid  justify-content-center">
-            <span className="navbar-brand mb-0 h1  fw-bold  text-light">
-              Condors Employee Management System
-              </span>
-          </div>
-        </nav>
-     <div className="container-fluid p-4">
+   
+     <div className="container-fluid m-0 gx-0">
      <Routes>
         <Route path='/' element={<Navbar />} >
           <Route index element={<Home />}/>

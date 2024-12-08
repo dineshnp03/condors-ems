@@ -10,6 +10,8 @@ import Home from './routes/Home/home';
 import List from './routes/List/list';
 import AddEmployee from './routes/Add Employee/addEmployee';
 import EmployeeDetail from './components/employee-detail';
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 function App() {

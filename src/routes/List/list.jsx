@@ -1,7 +1,7 @@
 import { Component } from "react";
 import EmployeeTable from "../../components/employee-table";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { Card, Form, Toast } from "react-bootstrap";
 
 const withRouterParam = (Component) => {
   return (props) => (
@@ -13,6 +13,7 @@ const withRouterParam = (Component) => {
     />
   );
 };
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -123,6 +124,7 @@ class List extends Component {
       console.log("Error deleting employee:", error.message);
     }
   };
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.myloc?.search !== this.props.myloc?.search) {
       this.loadEmployees();
@@ -156,76 +158,71 @@ class List extends Component {
   render() {
     return (
       <>
-        <div className="d-flex justify-content-end">
-          <div
-            className={` toast ${this.state.enableToast ? "show" : "hide"}`}
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="toast-header">
-              <strong className="me-auto">
-                {this.state.toastMessage.title}!!!
-              </strong>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-                onClick={() => this.setState({ enableToast: false })}
-              ></button>
+        {/* Toast Notification */}
+        <Toast
+          show={this.state.enableToast}
+          onClose={() => this.setState({ enableToast: false })}
+          className="position-fixed top-0 end-0 m-3"
+        >
+          <Toast.Header>
+            <strong className="me-auto">{this.state.toastMessage.title}</strong>
+          </Toast.Header>
+          <Toast.Body>{this.state.toastMessage.message}</Toast.Body>
+        </Toast>
+
+        <Card className="m-4 shadow">
+          <Card.Header>
+            <h4>Filter Options</h4>
+          </Card.Header>
+          <Card.Body>
+            <div className="row gx-4 px-5 justify-content-between">
+              <div className="my-3 col-sm-12 col-md-4">
+                <label htmlFor="filterType" className="form-label">
+                  Filter by Employee Type:
+                </label>
+                <Form.Select
+                  id="filterType"
+                  value={this.state.employeeType}
+                  onChange={this.filterEmployees}
+                >
+                  <option value="">All Employees</option>
+                  <option value="FullTime">Full-Time</option>
+                  <option value="PartTime">Part-Time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Seasonal">Seasonal</option>
+                </Form.Select>
+              </div>
+
+              <div className="col-sm-12 col-md-6 my-3">
+                <label htmlFor="retirementFileter" className="form-label">
+                  Filter by Upcoming Retirement Employees:
+                </label>
+                <Form.Check
+                  type="switch"
+                  id="custom-switch"
+                  label=""
+                  defaultChecked={this.state.retirementFilter}
+                  onChange={this.toggleUpcomingRetirements}
+                />
+              </div>
             </div>
-            <div className="toast-body">
-              {this.state.toastMessage.message}!!!.
-            </div>
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
 
-        <div className="row gx-4 px-5 justify-content-between">
-          <div className="my-3 col-sm-12 col-md-4">
-            <label htmlFor="filterType" className="form-label">
-              Filter by Employee Type:
-            </label>
-            <select
-              id="filterType"
-              className="form-select"
-              value={this.state.employeeType}
-              onChange={this.filterEmployees}
-            >
-              <option value="">All Employees</option>
-              <option value="FullTime">Full-Time</option>
-              <option value="PartTime">Part-Time</option>
-              <option value="Contract">Contract</option>
-              <option value="Seasonal">Seasonal</option>
-            </select>
-          </div>
-
-          <div className="col-sm-12 col-md-6 my-3">
-            <label htmlFor="retirementFileter" className="form-label">
-              Filter by Upcoming Retirement Employees:
-            </label>
-
-            <Form.Check
-              type="switch"
-              className="ms-3"
-              id="custom-switch"
-              label=""
-              defaultChecked={this.state.retirementFilter}
-              onChange={this.toggleUpcomingRetirements}
-            />
-          </div>
-        </div>
-
-        <div className="row gx-4">
-          <div className="col-sm-12 p-5">
+        <Card className="m-4 shadow">
+          <Card.Header>
+            <h4>Employee List</h4>
+          </Card.Header>
+          <Card.Body>
             <EmployeeTable
               deleteEmployee={this.deleteEmployee}
               employees={this.state.employees}
               retirementFilter={this.state.retirementFilter}
             />
-          </div>
-          <Outlet />
-        </div>
+          </Card.Body>
+        </Card>
+
+        <Outlet />
       </>
     );
   }

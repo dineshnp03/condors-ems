@@ -128,19 +128,19 @@ class EmployeeTable extends Component {
                         className="text-decoration-none text-reset"
                         to={`/editEmployee/${employee.id}`}
                       >
-                        <Button variant="primary">Edit</Button>
+                        <Button variant="primary"><i className="bi bi-pencil-square"></i></Button>
                       </Link>{" "}
                       <Link
                         className="text-decoration-none text-reset"
                         to={`/viewEmployee/${employee.id}`}
                       >
-                        <Button variant="secondary">View</Button>
+                        <Button variant="secondary"><i className="bi bi-eye"></i></Button>
                       </Link>{" "}
                       <Button
                         variant="danger"
                         onClick={() => this.handleDelete(employee)}
                       >
-                        Delete
+                        <i className="bi bi-trash"></i>
                       </Button>{" "}
                     </td>
                   </tr>

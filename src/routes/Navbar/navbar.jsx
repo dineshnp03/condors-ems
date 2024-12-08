@@ -1,79 +1,39 @@
-// import { Outlet, Link } from 'react-router-dom'
+import React from "react";
+import { Navbar, Nav, Container} from "react-bootstrap";
+import { Link, Outlet } from "react-router-dom";
 
-// const Navbar = () => {
-//     return(
-//         <div>
-//             <Link to='/'>Home</Link>
-//             {' | '}
-//             <Link to='/list'>List</Link>
-//             {' | '}
-//             <Link to='/addEmployee'>Add Employee</Link>
-//             <Outlet />
-//         </div>
-//     );
-// }
-
-// export default Navbar;
-
-import { Outlet, Link } from "react-router-dom";
-
-const Navbar = () => {
-  const navStyle = {
-    padding: "10px",
-    backgroundColor: "#f0f0f0",
-    borderBottom: "1px solid #ccc",
-  };
-
-  const linkStyle = {
-    margin: "0 10px",
-    textDecoration: "none",
-    color: "#333",
-  };
-
-  const linkHoverStyle = {
-    ...linkStyle,
-    color: "#007bff",
-  };
-
+const FancyNavbar = () => {
   return (
     <>
-      <div style={navStyle}>
-        <Link
-          to="/"
-          style={linkStyle}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.color = linkHoverStyle.color)
-          }
-          onMouseOut={(e) => (e.currentTarget.style.color = linkStyle.color)}
-        >
-          Home
-        </Link>
-        {" | "}
-        <Link
-          to="/list"
-          style={linkStyle}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.color = linkHoverStyle.color)
-          }
-          onMouseOut={(e) => (e.currentTarget.style.color = linkStyle.color)}
-        >
-          List
-        </Link>
-        {" | "}
-        <Link
-          to="/addEmployee"
-          style={linkStyle}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.color = linkHoverStyle.color)
-          }
-          onMouseOut={(e) => (e.currentTarget.style.color = linkStyle.color)}
-        >
-          Add Employee
-        </Link>
-      </div>
-      <Outlet />
+      {/* Navbar Section */}
+      <Navbar bg="dark" variant="dark" expand="lg" className="shadow mb-4">
+        <Container>
+          <Navbar.Brand as={Link} to="/" className="fw-bold text-uppercase">
+            Condors EMS
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="/" className="px-3">
+                Home
+              </Nav.Link>
+              <Nav.Link as={Link} to="/list" className="px-3">
+                List
+              </Nav.Link>
+              <Nav.Link as={Link} to="/addEmployee" className="px-3">
+                Add Employee
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* Render child routes */}
+      <Container className="p-4 shadow rounded" style={{ backgroundColor: "#f9f9f9" }}>
+        <Outlet />
+      </Container>
     </>
   );
 };
 
-export default Navbar;
+export default FancyNavbar;

@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 
 class EmployeeCreate extends Component {
   constructor(props) {
@@ -37,7 +38,6 @@ class EmployeeCreate extends Component {
       EmployeeType: employee.EmployeeType || "",
       currentStatus: employee.currentStatus ?? true,
     });
-    console.log(this.state.currentStatus);
   };
 
   handleDataChange = (e) => {
@@ -86,12 +86,12 @@ class EmployeeCreate extends Component {
     let isValid = true;
 
     if (!firstName || !pattern.test(firstName)) {
-      errors.push("First Name is not a valid one. Provide alphabets");
+      errors.push("First Name is not valid. Provide alphabets only.");
       isValid = false;
     }
 
     if (!lastName || !pattern.test(lastName)) {
-      errors.push("Last Name is not a valid one. Provide alphabets");
+      errors.push("Last Name is not valid. Provide alphabets only.");
       isValid = false;
     }
     this.setState({ errors, isValid }, () => {
@@ -114,7 +114,7 @@ class EmployeeCreate extends Component {
         this.setState({
           firstName: "",
           lastName: "",
-          age: 20,
+          age: "",
           dob: "",
           dateOfJoining: "",
           title: "",
@@ -123,7 +123,7 @@ class EmployeeCreate extends Component {
           currentStatus: true,
         });
       } else {
-        alert("Please fill all the fields and provide valid data");
+        alert("Please fill all the fields with valid data.");
       }
     });
   };
@@ -143,61 +143,51 @@ class EmployeeCreate extends Component {
     } = this.state;
     const { employee } = this.props;
     return (
-      <div>
+      <Card className="p-3 my-3">
         <h3>{employee ? "Update" : "Add"} Employee</h3>
-        {errors.length > 0
-          ? errors.map((error, index) => {
-              return (
-                <div key={index} className="alert alert-warning" role="alert">
-                  {error}
-                </div>
-              );
-            })
-          : ""}
 
-        <form
-          name="employeeForm"
-          onSubmit={this.handleAddEmployee}
-          className="card p-3 my-3"
-        >
-          <div className="mb-3">
-            <label className="form-label">First Name:</label>
-            <input
+        {errors.length > 0 &&
+          errors.map((error, index) => (
+            <Alert key={index} variant="warning">
+              {error}
+            </Alert>
+          ))}
+
+        <Form onSubmit={this.handleAddEmployee}>
+          <Form.Group className="mb-3">
+            <Form.Label>First Name:</Form.Label>
+            <Form.Control
               type="text"
               name="firstName"
-              id="firstName"
               value={firstName}
               onChange={this.handleDataChange}
               disabled={!!employee}
               placeholder="Enter First Name"
-              className="form-control"
               required
             />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Last Name:</label>
-            <input
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Last Name:</Form.Label>
+            <Form.Control
               type="text"
               name="lastName"
-              id="lastName"
-              placeholder="Enter Last Name"
-              className="form-control"
               value={lastName}
               onChange={this.handleDataChange}
               disabled={!!employee}
+              placeholder="Enter Last Name"
               required
             />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Date of Birth:</label>
-            <input
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Date of Birth:</Form.Label>
+            <Form.Control
               type="date"
               name="dob"
-              id="dob"
               value={dob}
               onChange={this.handleDataChange}
               disabled={!!employee}
-              className="form-control"
               max={new Date(
                 new Date().setFullYear(new Date().getFullYear() - 20)
               )
@@ -208,42 +198,39 @@ class EmployeeCreate extends Component {
               )
                 .toISOString()
                 .slice(0, 10)}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Age:</label>
-            <input
-              disabled
-              type="number"
-              name="age"
-              id="age"
-              min={20}
-              max={69}
-              placeholder="Age"
-              value={age}
-              className="form-control"
               required
             />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Date of Joining:</label>
-            <input
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Age:</Form.Label>
+            <Form.Control
+              type="number"
+              name="age"
+              value={age}
+              placeholder="Age"
+              disabled
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Date of Joining:</Form.Label>
+            <Form.Control
               type="date"
               name="dateOfJoining"
-              id="dateOfJoining"
               value={dateOfJoining}
               onChange={this.handleDataChange}
               disabled={!!employee}
-              className="form-control"
               max={new Date().toISOString().slice(0, 10)}
+              required
             />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Title:</label>
-            <select
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Title:</Form.Label>
+            <Form.Select
               name="title"
-              id="title"
-              className="form-select"
               value={title}
               onChange={this.handleDataChange}
               required
@@ -255,16 +242,15 @@ class EmployeeCreate extends Component {
               <option value="Manager">Manager</option>
               <option value="Director">Director</option>
               <option value="VP">VP</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Department:</label>
-            <select
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Department:</Form.Label>
+            <Form.Select
+              name="department"
               value={department}
               onChange={this.handleDataChange}
-              name="department"
-              id="department"
-              className="form-select"
               required
             >
               <option value="" disabled>
@@ -274,17 +260,16 @@ class EmployeeCreate extends Component {
               <option value="Marketing">Marketing</option>
               <option value="HR">HR</option>
               <option value="Engineering">Engineering</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Employee Type:</label>
-            <select
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Employee Type:</Form.Label>
+            <Form.Select
+              name="EmployeeType"
               value={EmployeeType}
               onChange={this.handleDataChange}
               disabled={!!employee}
-              name="EmployeeType"
-              id="EmployeeType"
-              className="form-select"
               required
             >
               <option value="" disabled>
@@ -294,31 +279,31 @@ class EmployeeCreate extends Component {
               <option value="FullTime">FullTime</option>
               <option value="Contract">Contract</option>
               <option value="Seasonal">Seasonal</option>
-            </select>
-          </div>
+            </Form.Select>
+          </Form.Group>
+
           {employee && (
-            <div className="mb-3">
-              <label className="form-label">Current Status:</label>
-              <select
+            <Form.Group className="mb-3">
+              <Form.Label>Current Status:</Form.Label>
+              <Form.Select
+                name="currentStatus"
                 value={currentStatus}
                 onChange={this.handleDataChange}
-                name="currentStatus"
-                id="currentStatus"
-                className="form-select"
                 required
               >
                 <option value={true}>Working</option>
                 <option value={false}>Retired</option>
-              </select>
-            </div>
+              </Form.Select>
+            </Form.Group>
           )}
-          <div className="d-flex justify-content-center mb-3">
-            <button type="submit" className="btn btn-dark ">
+
+          <div className="d-flex justify-content-center">
+            <Button type="submit" variant="dark">
               {employee ? "Update" : "Add"} Employee
-            </button>
+            </Button>
           </div>
-        </form>
-      </div>
+        </Form>
+      </Card>
     );
   }
 }

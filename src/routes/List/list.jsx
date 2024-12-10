@@ -1,6 +1,6 @@
 import { Component } from "react";
 import EmployeeTable from "../../components/employee-table";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Card, Form, Toast } from "react-bootstrap";
 
 const withRouterParam = (Component) => {
